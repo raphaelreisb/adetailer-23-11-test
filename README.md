@@ -1,6 +1,6 @@
-# ADetailer
+# !After Detailer
 
-ADetailer is a extension for stable diffusion webui, similar to Detection Detailer, except it uses ultralytics instead of the mmdet.
+!After Detailer is a extension for stable diffusion webui, similar to Detection Detailer, except it uses ultralytics instead of the mmdet.
 
 ## Install
 
@@ -22,17 +22,15 @@ You **DON'T** need to download any model from huggingface.
 
 ## Options
 
-| Model, Prompts                    |                                                                                   |                                                   |
-| --------------------------------- | --------------------------------------------------------------------------------- | ------------------------------------------------- |
-| ADetailer model                   | Determine what to detect.                                                         | `None` = disable                                  |
-| ADetailer prompt, negative prompt | Prompts and negative prompts to apply                                             | If left blank, it will use the same as the input. |
-| Skip img2img                      | Skip img2img. In practice, this works by changing the step count of img2img to 1. | img2img only                                      |
+| Model, Prompts                    |                                       |                                                   |
+| --------------------------------- | ------------------------------------- | ------------------------------------------------- |
+| ADetailer model                   | Determine what to detect.             | `None` = disable                                  |
+| ADetailer prompt, negative prompt | Prompts and negative prompts to apply | If left blank, it will use the same as the input. |
 
-| Detection                            |                                                                                              |              |
-| ------------------------------------ | -------------------------------------------------------------------------------------------- | ------------ |
-| Detection model confidence threshold | Only objects with a detection model confidence above this threshold are used for inpainting. |              |
-| Mask min/max ratio                   | Only use masks whose area is between those ratios for the area of the entire image.          |              |
-| Mask only the top k largest          | Only use the k objects with the largest area of the bbox.                                    | 0 to disable |
+| Detection                            |                                                                                              |     |
+| ------------------------------------ | -------------------------------------------------------------------------------------------- | --- |
+| Detection model confidence threshold | Only objects with a detection model confidence above this threshold are used for inpainting. |     |
+| Mask min/max ratio                   | Only use masks whose area is between those ratios for the area of the entire image.          |     |
 
 If you want to exclude objects in the background, try setting the min ratio to around `0.01`.
 
@@ -88,10 +86,9 @@ Put your [ultralytics](https://github.com/ultralytics/ultralytics) yolo model in
 
 It must be a bbox detection or segment model and use all label.
 
-## How it works
+## Example
 
-ADetailer works in three simple steps.
+![image](https://i.imgur.com/38RSxSO.png)
+![image](https://i.imgur.com/2CYgjLx.png)
 
-1. Create an image.
-2. Detect object with a detection model and create a mask image.
-3. Inpaint using the image from 1 and the mask from 2.
+[![ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/F1F1L7V2N)

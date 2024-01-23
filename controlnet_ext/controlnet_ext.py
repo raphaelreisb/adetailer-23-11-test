@@ -4,22 +4,12 @@ import importlib
 import re
 from functools import lru_cache
 from pathlib import Path
-from textwrap import dedent
 
 from modules import extensions, sd_models, shared
+from modules.paths import data_path, models_path, script_path
 
-try:
-    from modules.paths import extensions_builtin_dir, extensions_dir, models_path
-except ImportError as e:
-    msg = """
-    [-] ADetailer: `stable-diffusion-webui < 1.1.0` is no longer supported.
-        Please upgrade to stable-diffusion-webui >= 1.1.0.
-        or you can use ADetailer v23.10.1 (https://github.com/Bing-su/adetailer/archive/refs/tags/v23.10.1.zip)
-    """
-    raise RuntimeError(dedent(msg)) from e
-
-ext_path = Path(extensions_dir)
-ext_builtin_path = Path(extensions_builtin_dir)
+ext_path = Path(data_path, "extensions")
+ext_builtin_path = Path(script_path, "extensions-builtin")
 controlnet_exists = False
 controlnet_path = None
 cn_base_path = ""
@@ -39,7 +29,7 @@ cn_model_module = {
     "scribble": "t2ia_sketch_pidi",
     "lineart": "lineart_coarse",
     "openpose": "openpose_full",
-    "tile": "tile_resample",
+    "tile": None,
 }
 cn_model_regex = re.compile("|".join(cn_model_module.keys()))
 
@@ -70,13 +60,11 @@ class ControlNetExt:
         if (not self.cn_available) or model == "None":
             return
 
-        if module is None or module == "None":
+        if module is None:
             for m, v in cn_model_module.items():
                 if m in model:
                     module = v
                     break
-            else:
-                module = None
 
         cn_units = [
             self.external_cn.ControlNetUnit(
@@ -90,13 +78,7 @@ class ControlNetExt:
             )
         ]
 
-        try:
-            self.external_cn.update_cn_script_in_processing(p, cn_units)
-        except AttributeError as e:
-            if "script_args_value" not in str(e):
-                raise
-            msg = "[-] Adetailer: ControlNet option not available in WEBUI version lower than 1.6.0 due to updates in ControlNet"
-            raise RuntimeError(msg) from e
+        self.external_cn.update_cn_script_in_processing(p, cn_units)
 
 
 def get_cn_model_dirs() -> list[Path]:
@@ -109,9 +91,9 @@ def get_cn_model_dirs() -> list[Path]:
     ext_dir2 = getattr(shared.cmd_opts, "controlnet_dir", "")
 
     dirs = [cn_model_dir]
-    dirs += [
-        Path(ext_dir) for ext_dir in [cn_model_dir_old, ext_dir1, ext_dir2] if ext_dir
-    ]
+    for ext_dir in [cn_model_dir_old, ext_dir1, ext_dir2]:
+        if ext_dir:
+            dirs.append(Path(ext_dir))
 
     return dirs
 
